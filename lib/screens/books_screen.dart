@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_lib/const/text.dart';
 import 'package:e_lib/model/book.dart';
 import 'package:e_lib/model/named_entity.dart';
 import 'package:e_lib/screens/book_details_screen.dart';
@@ -175,14 +176,10 @@ class _BooksScreenState extends State<BooksScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Используем стандартные цвета Flutter
-    const Color primaryColor = Colors.blue;
-    const Color secondaryBg = Color(0xFFF5F5F5);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Library'),
-        backgroundColor: primaryColor,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
           // Удален showServerSelectionModal
@@ -198,7 +195,7 @@ class _BooksScreenState extends State<BooksScreen> {
           ),
         ],
       ),
-      backgroundColor: secondaryBg,
+      backgroundColor: AppColors.secondaryBg,
       body: RefreshIndicator(
         onRefresh: () => _fetchBooks(reset: true),
         child: CustomScrollView(
@@ -215,21 +212,18 @@ class _BooksScreenState extends State<BooksScreen> {
                   children: [
                     _buildSearchField(theme),
                     const SizedBox(height: 12),
-                    _buildTypeSelector(primaryColor),
+                    _buildTypeSelector(),
                     const SizedBox(height: 8),
                     _buildFiltersRow(),
                     const SizedBox(height: 8),
                     if (_error != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          // UIText заменен на Text
-                          _error ?? '',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontSize: 14,
-                          ),
-                        ),
+                        child: UIText(
+                          text: _error ?? '',
+                          context: context,
+                          color: Theme.of(context).colorScheme.error,
+                        ).t3,
                       ),
                   ],
                 ),
@@ -247,10 +241,7 @@ class _BooksScreenState extends State<BooksScreen> {
                     children: [
                       const Icon(Icons.menu_book_outlined, size: 48),
                       const SizedBox(height: 8),
-                      const Text(
-                        'No books found',
-                        style: TextStyle(fontSize: 16),
-                      ), // UIText заменен на Text
+                      UIText(text: 'No books found', context: context).t2,
                       TextButton(
                         onPressed: () => _fetchBooks(reset: true),
                         child: const Text('Retry'),
@@ -332,25 +323,17 @@ class _BooksScreenState extends State<BooksScreen> {
     );
   }
 
-  Widget _buildTypeSelector(Color primaryColor) {
-    // Используем простой светлый фон
-    const Color lightGray = Color(0xFFE0E0E0);
-
+  Widget _buildTypeSelector() {
     final items = [('book', 'Books'), ('audioBook', 'Audio'), ('3dBook', '3D')];
     return Wrap(
       spacing: 8,
       children: items
           .map(
             (item) => ChoiceChip(
-              backgroundColor: lightGray,
-              selectedColor: primaryColor,
+              backgroundColor: AppColors.lightGray,
+              selectedColor: AppColors.primary,
               side: BorderSide.none,
-              label: Text(
-                item.$2,
-                style: TextStyle(
-                  color: _type == item.$1 ? Colors.white : Colors.black87,
-                ),
-              ),
+              label: Text(item.$2),
               selected: _type == item.$1,
               onSelected: (val) {
                 if (val) {
@@ -428,9 +411,6 @@ class _DropdownFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Используем простой светлый фон
-    const Color lightGray = Color(0xFFE0E0E0);
-
     final selectedLabel = value == null
         ? 'All'
         : items
@@ -527,7 +507,7 @@ class _DropdownFilter extends StatelessWidget {
                       itemCount: filtered.length + 1,
                       separatorBuilder: (_, __) => const Divider(
                         height: 1,
-                        color: Color(0xFFE0E0E0), // lightGray
+                        color: AppColors.lightGray, // lightGray
                       ),
                       itemBuilder: (context, index) {
                         if (index == 0) {
@@ -571,7 +551,6 @@ class _BookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color textSecondary = Colors.grey;
     final imageUrl = _resolveUrl(book.thumbnail);
     return InkWell(
       onTap: onTap,
@@ -602,19 +581,19 @@ class _BookTile extends StatelessWidget {
                       placeholder: (_, __) => Container(
                         width: 76,
                         height: 104,
-                        color: Colors.grey.withOpacity(0.5), // lightGray
+                        color: AppColors.lightGray.withOpacity(0.5),
                       ),
                       errorWidget: (_, __, ___) => Container(
                         width: 76,
                         height: 104,
-                        color: Colors.grey.withOpacity(0.5), // lightGray
+                        color: AppColors.lightGray.withOpacity(0.5),
                         child: const Icon(Icons.menu_book_outlined),
                       ),
                     )
                   : Container(
                       width: 76,
                       height: 104,
-                      color: Colors.grey.withOpacity(0.5), // lightGray
+                      color: AppColors.lightGray.withOpacity(0.5),
                       child: const Icon(Icons.menu_book_outlined),
                     ),
             ),
@@ -623,34 +602,21 @@ class _BookTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // UIText заменен на Text
-                  Text(
-                    book.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  UIText(text: book.name, context: context).t2,
                   const SizedBox(height: 4),
                   if (book.author != null)
-                    Text(
-                      // UIText заменен на Text
-                      book.author?.name ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: textSecondary,
-                      ),
-                    ),
+                    UIText(
+                      text: book.author?.name ?? '',
+                      context: context,
+                      color: AppColors.textSecondary,
+                    ).t3,
                   const SizedBox(height: 8),
                   if (book.category != null)
-                    Text(
-                      // UIText заменен на Text
-                      book.category?.name ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: textSecondary,
-                      ),
-                    ),
+                    UIText(
+                      text: book.category?.name ?? '',
+                      context: context,
+                      color: AppColors.textSecondary,
+                    ).t3,
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 12,
@@ -659,23 +625,19 @@ class _BookTile extends StatelessWidget {
                       _StatChip(
                         icon: Icons.remove_red_eye_outlined,
                         label: '${book.viewCount}',
-                        textSecondary: textSecondary,
                       ),
                       _StatChip(
                         icon: Icons.download_outlined,
                         label: '${book.downloadCount}',
-                        textSecondary: textSecondary,
                       ),
                       _StatChip(
                         icon: Icons.favorite_outline,
                         label: '${book.likeCount}',
-                        textSecondary: textSecondary,
                       ),
                       if (book.year != null)
                         _StatChip(
                           icon: Icons.calendar_today_outlined,
                           label: '${book.year}',
-                          textSecondary: textSecondary,
                         ),
                     ],
                   ),
@@ -701,26 +663,20 @@ class _BookTile extends StatelessWidget {
 class _StatChip extends StatelessWidget {
   final IconData icon;
   final String label;
-  final Color
-  textSecondary; // Передача цвета для замены AppColors.textSecondary
-  const _StatChip({
-    required this.icon,
-    required this.label,
-    required this.textSecondary,
-  });
+  const _StatChip({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 18, color: textSecondary),
+        Icon(icon, size: 18, color: AppColors.textSecondary),
         const SizedBox(width: 4),
-        Text(
-          // UIText заменен на Text
-          label,
-          style: TextStyle(fontSize: 14, color: textSecondary),
-        ),
+        UIText(
+          text: label,
+          context: context,
+          color: AppColors.textSecondary,
+        ).t3,
       ],
     );
   }

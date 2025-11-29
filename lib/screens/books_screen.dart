@@ -26,6 +26,20 @@ class _BooksScreenState extends State<BooksScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    if (index == 0) return;
+    if (index == 1) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const SettingsScreen()))
+          .then((_) {
+            setState(() {
+              _selectedIndex = 0;
+            });
+          });
+    }
+  }
 
   List<Book> _books = [];
   int _totalCount = 0;
@@ -299,6 +313,23 @@ class _BooksScreenState extends State<BooksScreen> {
               label: const Text('Reset'),
             )
           : null,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.lightGray,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+      ),
     );
   }
 
@@ -678,6 +709,35 @@ class _StatChip extends StatelessWidget {
           color: AppColors.textSecondary,
         ).t3,
       ],
+    );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _isDarkMode = false;
+  void _toggleTheme(bool value) {
+    setState(() {
+      _isDarkMode = value;
+      print('Theme Changed: ${value ? 'Dark' : 'Light'}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(child: Text('..................')),
     );
   }
 }

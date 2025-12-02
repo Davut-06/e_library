@@ -60,10 +60,8 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
       setState(() {
         _book = result;
       });
-      // Инкрементируем просмотр только после успешной загрузки книги
       await _api.incrementView(widget.bookId);
     } catch (_) {
-      // Игнорируем ошибку загрузки, если она не критична
     } finally {
       if (mounted) {
         setState(() {
@@ -170,15 +168,12 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
 
   Future<void> _addDownloadedBook(_DownloadedBook item) async {
     final updated = List<_DownloadedBook>.from(_downloadedBooks);
-    // Проверяем, существует ли уже книга с таким же путем
     final existingIndex = updated.indexWhere(
       (element) => element.id == item.id,
     );
     if (existingIndex >= 0) {
-      // Обновляем существующую запись (например, время сохранения)
       updated[existingIndex] = item;
     } else {
-      // Добавляем новую в начало
       updated.insert(0, item);
     }
 
@@ -229,17 +224,14 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
   }
 
   Widget _buildDownloadedSection() {
-    // Проверяем наличие скачанной версии для текущей книги, чтобы отобразить ее первой
     final currentBookDownload = _downloadedBooks
         .where((item) => item.id == _book?.id)
         .toList();
 
-    // Удаляем текущую книгу из основного списка для избежания дублирования
     final otherDownloads = _downloadedBooks
         .where((item) => item.id != _book?.id)
         .toList();
 
-    // Формируем окончательный список для отображения (текущая книга, затем остальные)
     final displayList = [...currentBookDownload, ...otherDownloads];
 
     return Column(
@@ -306,9 +298,10 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final book = _book;
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text(book?.name ?? 'Book')),
-      backgroundColor: AppColors.secondaryBg,
+      backgroundColor: colorScheme.background,
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : book == null
@@ -420,7 +413,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                           Icons.favorite,
                           color: _liking
                               ? AppColors.textSecondary
-                              : AppColors.primary,
+                              : const Color.fromARGB(255, 255, 0, 0),
                         ),
                       ),
                     ],
@@ -444,6 +437,11 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
 
   Widget _buildCover(Book book) {
     final imageUrl = _resolveUrl(book.thumbnail);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final placeholderColor = isDarkMode
+        ? Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5)
+        : AppColors.lightGray.withOpacity(0.5);
+
     return Center(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -453,22 +451,19 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                 width: 180,
                 height: 240,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => Container(
-                  width: 180,
-                  height: 240,
-                  color: AppColors.lightGray.withOpacity(0.5),
-                ),
+                placeholder: (_, __) =>
+                    Container(width: 180, height: 240, color: placeholderColor),
                 errorWidget: (_, __, ___) => Container(
                   width: 180,
                   height: 240,
-                  color: AppColors.lightGray.withOpacity(0.5),
+                  color: placeholderColor,
                   child: const Icon(Icons.menu_book_outlined, size: 48),
                 ),
               )
             : Container(
                 width: 180,
                 height: 240,
-                color: AppColors.lightGray.withOpacity(0.5),
+                color: placeholderColor,
                 child: const Icon(Icons.menu_book_outlined, size: 48),
               ),
       ),
@@ -561,23 +556,18 @@ class _DownloadedBookStorage {
       final decoded = jsonDecode(raw);
       if (decoded is List) {
         return decoded
-            .whereType<
-              Map<String, dynamic>
-            >() // Убедимся, что это Map<String, dynamic>
+            .whereType<Map<String, dynamic>>()
             .map((item) {
               try {
                 return _DownloadedBook.fromMap(item);
               } catch (_) {
-                // Игнорируем некорректно сформированные элементы
                 return null;
               }
             })
             .whereType<_DownloadedBook>()
             .toList();
       }
-    } catch (_) {
-      // Игнорируем некорректно сформированное хранилище, возвращаем пустой список
-    }
+    } catch (_) {}
     return [];
   }
 
@@ -595,23 +585,28 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final backgroundColor = isDarkMode ? colorScheme.surface : Colors.white;
+    final borderColor = isDarkMode
+        ? colorScheme.onSurface.withOpacity(0.1)
+        : AppColors.lightGray.withOpacity(0.4);
+    final contentColor = AppColors.textSecondary;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.lightGray.withOpacity(0.4)),
+        border: Border.all(color: borderColor),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: AppColors.textSecondary),
+          Icon(icon, size: 18, color: contentColor),
           const SizedBox(width: 6),
-          UIText(
-            text: label,
-            context: context,
-            color: AppColors.textSecondary,
-          ).t3,
+          UIText(text: label, context: context, color: contentColor).t3,
         ],
       ),
     );

@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:e_lib/const/text.dart';
 import 'package:e_lib/model/book.dart';
 import 'package:e_lib/model/named_entity.dart';
+import 'package:e_lib/provider/theme_provider.dart';
 import 'package:e_lib/screens/book_details_screen.dart';
 import 'package:e_lib/services/base_api_query.dart';
 import 'package:e_lib/services/books_api.dart';
+import 'package:e_lib/widgets/ios_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:e_lib/utils/colors.dart';
+import 'package:provider/provider.dart';
 // Используем стандартные Material-цвета
 // import 'package:e_university/utils/colors.dart';
 
@@ -31,6 +34,7 @@ class _BooksScreenState extends State<BooksScreen> {
   void _onItemTapped(int index) {
     if (index == 0) return;
     if (index == 1) {
+      // Предполагаем, что SettingsScreen существует и доступен
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => const SettingsScreen()))
           .then((_) {
@@ -193,8 +197,9 @@ class _BooksScreenState extends State<BooksScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Library'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor:
+            theme.appBarTheme.backgroundColor, // AppColors.primary,
+        foregroundColor: theme.appBarTheme.foregroundColor, // Colors.white,
         actions: [
           // Удален showServerSelectionModal
           IconButton(
@@ -209,7 +214,7 @@ class _BooksScreenState extends State<BooksScreen> {
           ),
         ],
       ),
-      backgroundColor: AppColors.secondaryBg,
+      backgroundColor: theme.colorScheme.background, // AppColors.secondaryBg,
       body: RefreshIndicator(
         onRefresh: () => _fetchBooks(reset: true),
         child: CustomScrollView(
@@ -325,43 +330,72 @@ class _BooksScreenState extends State<BooksScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.lightGray,
+        selectedItemColor: theme.colorScheme.primary, // AppColors.primary,
+        unselectedItemColor:
+            theme.colorScheme.onSurfaceVariant, // AppColors.lightGray,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
     );
   }
 
+  // --- ИЗМЕНЕННЫЙ МЕТОД: Строка поиска теперь соответствует стилю фильтров ---
   Widget _buildSearchField(ThemeData theme) {
+    // Безопасно получаем ширину границы из темы
+    final borderSideWidth =
+        theme.inputDecorationTheme.enabledBorder?.borderSide.width ?? 1.0;
+
     return TextField(
       controller: _searchController,
       onChanged: _onSearchChanged,
       decoration: InputDecoration(
         hintText: 'Search books',
-        prefixIcon: const Icon(Icons.search),
+        prefixIcon: Icon(
+          Icons.search,
+          color: theme.colorScheme.onSurfaceVariant, // Цвет иконки
+        ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: theme.colorScheme.surface, // Фон из темы
+        // 1. АКТИВНАЯ (ENABLED) ГРАНИЦА: скругленная и с цветом обводки из темы
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: theme.colorScheme.outline, // Цвет обводки
+            width: borderSideWidth,
+          ),
+        ),
+
+        // 2. ГРАНИЦА ПО УМОЛЧАНИЮ/ФОКУСУ: скругленная и с цветом обводки из темы
+        // Это необходимо, чтобы на фокусе не пропадало скругление
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: theme.dividerColor),
+          borderSide: BorderSide(
+            color: theme.colorScheme.outline,
+            width: borderSideWidth,
+          ),
         ),
+
+        // Контентные отступы
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 10,
         ),
+        isDense: true, // Делаем поле компактным (как и фильтры)
       ),
     );
   }
+  // --- КОНЕЦ ИЗМЕНЕННОГО МЕТОДА ---
 
   Widget _buildTypeSelector() {
+    final theme = Theme.of(context);
     final items = [('book', 'Books'), ('audioBook', 'Audio'), ('3dBook', '3D')];
     return Wrap(
       spacing: 8,
       children: items
           .map(
             (item) => ChoiceChip(
-              backgroundColor: AppColors.lightGray,
+              backgroundColor:
+                  theme.colorScheme.tertiary, // AppColors.lightGray,
               selectedColor: AppColors.primary,
               side: BorderSide.none,
               label: Text(item.$2),
@@ -442,6 +476,10 @@ class _DropdownFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // --- ПОЛУЧАЕМ ОБЪЕКТ ТЕМЫ ---
+    final theme = Theme.of(context);
+    // -----------------------------
+
     final selectedLabel = value == null
         ? 'All'
         : items
@@ -451,6 +489,10 @@ class _DropdownFilter extends StatelessWidget {
               )
               .name;
 
+    // Безопасно извлекаем ширину границы из темы.
+    final borderSideWidth =
+        theme.inputDecorationTheme.enabledBorder?.borderSide.width ?? 1.0;
+
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () => _openPicker(context),
@@ -458,23 +500,53 @@ class _DropdownFilter extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: Colors.white,
+
+          // Используем цвет поверхности из темы для фона
+          fillColor: theme.colorScheme.surface,
+
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 12,
           ),
+
+          // 1. ГРАНИЦА ПО УМОЛЧАНИЮ/ФОКУСУ
+          // Явно создаем OutlineInputBorder для поддержки borderRadius
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.transparent),
+            // Используем основной цвет/стиль границы из темы (или стандартный)
+            borderSide:
+                theme.inputDecorationTheme.border?.borderSide ??
+                BorderSide(
+                  color: theme.colorScheme.onSurface,
+                  width: borderSideWidth,
+                ),
           ),
+
+          // 2. АКТИВНАЯ (ENABLED) ГРАНИЦА
+          // Явно создаем OutlineInputBorder для поддержки borderRadius
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            // Используем цвет outline из ColorScheme (для видимой границы)
+            borderSide: BorderSide(
+              color: theme.colorScheme.outline,
+              width: borderSideWidth,
+            ),
+          ),
+          isDense: true, // Сохраняем компактность
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(selectedLabel, overflow: TextOverflow.ellipsis),
+              child: Text(
+                selectedLabel,
+                overflow: TextOverflow.ellipsis,
+                // Используем цвет текста на поверхности
+                style: TextStyle(color: theme.colorScheme.onSurface),
+              ),
             ),
-            const Icon(Icons.arrow_drop_down),
+            // Используем цвет иконки на поверхности
+            Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurface),
           ],
         ),
       ),
@@ -587,7 +659,7 @@ class _BookTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface, // Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -639,14 +711,18 @@ class _BookTile extends StatelessWidget {
                     UIText(
                       text: book.author?.name ?? '',
                       context: context,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.color, // AppColors.textSecondary,
                     ).t3,
                   const SizedBox(height: 8),
                   if (book.category != null)
                     UIText(
                       text: book.category?.name ?? '',
                       context: context,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.color, //AppColors.textSecondary,
                     ).t3,
                   const SizedBox(height: 8),
                   Wrap(
@@ -713,31 +789,224 @@ class _StatChip extends StatelessWidget {
   }
 }
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  Widget build(BuildContext context) {
+    // Получаем цветовую схему для динамической адаптации UI
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          // Современный стиль: простой AppBar без elevation (теней)
+          appBar: AppBar(
+            title: const Text('Настройки'),
+            centerTitle: true,
+            // Убираем тень, чтобы UI выглядел "плоским" и современным
+            elevation: 0,
+            backgroundColor: colorScheme.background,
+            foregroundColor: colorScheme.onSurface,
+          ),
+          body: ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              // -----------------------------------------------------------------
+              // СЕКЦИЯ 1: Аккаунт и Основные
+              // -----------------------------------------------------------------
+              _SettingsSection(
+                title: 'Аккаунт',
+                children: [
+                  _SettingsTile(
+                    icon: Icons.person_outline,
+                    title: 'Профиль',
+                    onTap: () {},
+                  ),
+                  _SettingsTile(
+                    icon: Icons.notifications_none,
+                    title: 'Уведомления',
+                    onTap: () {},
+                  ),
+                  _SettingsTile(
+                    icon: Icons.lock_outline,
+                    title: 'Приватность и безопасность',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24), // Отступ между секциями
+              // -----------------------------------------------------------------
+              // СЕКЦИЯ 2: Оформление (Смена темы)
+              // -----------------------------------------------------------------
+              _SettingsSection(
+                title: 'Оформление',
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.brightness_3,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: const Text("Ночной режим"),
+                    trailing: IOS7Switch(
+                      value: themeProvider.themeMode == ThemeMode.dark,
+                      onChanged: (v) {
+                        themeProvider.setThemeMode(
+                          v ? ThemeMode.dark : ThemeMode.light,
+                        );
+                      },
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                ],
+              ),
+              // -----------------------------------------------------------------
+              // СЕКЦИЯ 3: Помощь
+              // -----------------------------------------------------------------
+              _SettingsSection(
+                title: 'Помощь',
+                children: [
+                  _SettingsTile(
+                    icon: Icons.help_outline,
+                    title: 'Справка',
+                    onTap: () {},
+                  ),
+                  _SettingsTile(
+                    icon: Icons.info_outline,
+                    title: 'О приложении',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDarkMode = false;
-  void _toggleTheme(bool value) {
-    setState(() {
-      _isDarkMode = value;
-      print('Theme Changed: ${value ? 'Dark' : 'Light'}');
-    });
-  }
+// -----------------------------------------------------------------------------
+// Вспомогательные виджеты для создания современного вида
+// -----------------------------------------------------------------------------
+
+// Виджет для создания секции (заголовок + карточка с элементами)
+class _SettingsSection extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const _SettingsSection({required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(child: Text('..................')),
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок секции, немного тусклый для акцента
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+          child: Text(
+            title.toUpperCase(),
+            style: TextStyle(
+              color: colorScheme.onSurface.withOpacity(0.6),
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        // Контейнер с закругленными углами для группировки элементов
+        Container(
+          decoration: BoxDecoration(
+            // Используем цвет поверхности (surface), который может быть светлее фона
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            // Добавляем легкую тень, если тема светлая (опционально)
+            boxShadow: Theme.of(context).brightness == Brightness.light
+                ? [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.08),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                : null,
+          ),
+          // Добавляем разделители между элементами списка
+          child: Column(
+            children: children.map((widget) {
+              final isLast = children.last == widget;
+              return Column(
+                children: [
+                  widget,
+                  if (!isLast)
+                    Divider(
+                      height: 1,
+                      indent: 52, // Отступ, чтобы разделитель был под текстом
+                      color: colorScheme.onSurface.withOpacity(0.1),
+                    ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Обычный элемент настройки (аналог ListTile)
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+    );
+  }
+}
+
+// Специализированный виджет для выбора темы с RadioListTile
+class _ThemeRadioTile extends StatelessWidget {
+  final String title;
+  final ThemeMode value;
+  final ThemeMode groupValue;
+  final ValueChanged<ThemeMode?> onChanged;
+
+  const _ThemeRadioTile({
+    required this.title,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return RadioListTile<ThemeMode>(
+      title: Text(title),
+      value: value,
+      groupValue: groupValue,
+      onChanged: onChanged,
+      // Убираем отступы, чтобы соответствовать стилю ListTile в секции
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+      // Изменяем положение radio-кнопки
+      controlAffinity: ListTileControlAffinity.trailing,
     );
   }
 }

@@ -1,4 +1,4 @@
-# 📚 My Flutter Library App: A Digital Haven for Book Lovers!
+# 📚 Flutter E-Library App: A Digital Haven for Book Lovers!
 
 Welcome to the repository for my Flutter-built library application! This project is a comprehensive and visually appealing mobile app designed to provide users with an excellent book browsing and reading experience.
 

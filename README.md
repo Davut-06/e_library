@@ -1,114 +1,118 @@
-📚 Flutter E-Library App — A Digital Haven for Book Lovers!
+# 📚 Flutter E-Library App — A Digital Haven for Book Lovers!
 
-Welcome to the Flutter E-Library App repository!
-This mobile application is designed to deliver a smooth, modern, and efficient reading experience. Built entirely with Flutter, it offers a clean UI, fast navigation, and a growing set of features for readers and learners.
+Welcome to the **Flutter E-Library App** repository!  
+This mobile application is designed to deliver a smooth, modern, and efficient reading experience.  
+Built entirely with **Flutter**, it offers a clean UI, fast navigation, and a growing set of features for readers and learners.
 
-✨ Key Features
-📖 1. Diverse Library Access & Smart Search
+---
+
+## ✨ Key Features
+
+### 📖 1. Diverse Library Access & Smart Search
 
 The main screen gives users quick access to different book types:
 
-Regular Books
+- **Regular Books**
+- **Audio Books**
+- **3D Books** (conceptual / future integration)
 
-Audio Books
+Includes a **quick search bar** to find books by **Name** or **Author**.
 
-3D Books (conceptual/future integration)
+---
 
-Plus a search bar for fast lookup by Book Name or Author.
-
-🔍 2. Advanced Filtering
+### 🔍 2. Advanced Filtering
 
 Users can filter books using:
 
-👤 Author
+- 👤 **Author**
+- 🏷️ **Category**
+- 🎭 **Genre**
+- 🧠 **Subject / Topic**
 
-🏷️ Category
+Find exactly what you need with advanced filter options.
 
-🎭 Genre
+---
 
-🧠 Subject / Topic
+### 📘 3. Book Details & Reading Options
 
-This makes it easy to find exactly what you need.
+Each Book Details page includes:
 
-📘 3. Book Details & Reading Options
+- **Description**
+- **Publication Year**
+- **Category / Subject**
+- **Views**
+- **Downloads**
+- **Likes**
 
-Each book page includes:
+Additional features:
 
-Description
+- **User Download History** — files previously downloaded from this page
+- **Reading Options:**
+  - ⬇️ **Download to device**
+  - 🌐 **Read Online** in browser
 
-Publication Year
+---
 
-Category / Subject
+## ⚙️ Settings & Customization
 
-Views, Downloads, Likes
+### 🎨 Theme Switching
 
-User Download History — previously downloaded files shown at the bottom
+- Light / Dark mode toggle  
+- Automatic theme sync based on system settings
 
-Reading options:
+### 🚧 UI Mockups (Future Features)
 
-⬇️ Download to device
+These items are UI-only for now and intended for later implementation:
 
-🌐 Read Online via browser
+- Profile & Account  
+- Notifications  
+- Privacy & Security  
+- Help (FAQ, Support, About App)
 
-⚙️ Settings & Customization
-🎨 Theme Switching
+---
 
-Light / Dark mode toggle
+## 🛠️ Technology Stack
 
-Automatic system-theme sync
+- **Flutter** (Dart)
+- Git & GitHub
+- State management (TBD)
 
-🚧 UI Mockups for Future Updates
+---
 
-(Not yet functional — design only)
+## 🤝 Contribution
 
-Profile & Account
+Feel free to explore the code, open issues, or suggest improvements.  
+All feedback is welcome!
 
-Notifications
+---
 
-Privacy & Security
-
-Help (FAQ, Support, About App)
-
-🛠️ Technology Stack
-
-Flutter (Dart)
-
-Git & GitHub
-
-State management (to be added)
-
-🤝 Contribution
-
-Feel free to explore, open issues, or suggest improvements.
-Any feedback is welcome!
-
-🚀 Installation & Setup Guide
+## 🚀 Installation & Setup Guide
 
 Follow these steps to download and run the project locally.
 
-✅ Prerequisites
+---
 
-Before starting, make sure you have:
+### ✅ Prerequisites
 
-Flutter SDK installed
+Ensure you have the following installed:
 
-Git installed
+- **Flutter SDK**
+- **Git**
+- IDE: **VS Code** or **Android Studio**
+- Physical device or emulator
 
-An IDE like Android Studio or VS Code
+---
 
-A connected device or emulator
+### 📥 1. Clone the Repository
 
-📥 1. Clone the Repository
-git clone https://github.com/Davut-06/e_library.git
+```bash
+git clone https://github.com/Davut-06/e_library.git 
 
-📂 2. Open the Project Folder
+# 📂 2. Open the Project Folder
 cd e_library
 
-📦 3. Install Dependencies
+# Install dependencies
 flutter pub get
 
-▶️ 4. Run the Application
-
-Start an emulator or connect a real device, then run:
-
-flutter run
+# Run the application
+flutter run 

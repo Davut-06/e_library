@@ -85,19 +85,19 @@ To download, run, and test this project locally, follow these steps.
 1. **Clone the Repository:**
    Open your terminal/command line and clone the project using the repository URL:
    ```bash
-   git clone [Your Repository URL Here]
+   git clone https://github.com/Davut-06/e_library.git
 Navigate to Project Folder: Change the directory to the newly cloned project folder:
 
-Bash
+'''bash
+cd e_library
 
-cd my_flutter_library_app
 Install Dependencies: Fetch all the necessary packages and dependencies listed in pubspec.yaml:
 
-Bash
+'''bash
 
 flutter pub get
 Run the App: Connect a physical device or start an emulator/simulator. Then run the application:
 
-Bash
+'''bash
 
 flutter run

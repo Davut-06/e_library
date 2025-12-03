@@ -86,7 +86,7 @@ To download, run, and test this project locally, follow these steps.
    Open your terminal/command line and clone the project using the repository URL:
    ```bash
    git clone https://github.com/Davut-06/e_library.git
-Navigate to Project Folder: Change the directory to the newly cloned project folder:
+**Navigate to Project Folder: Change the directory to the newly cloned project folder:**
 
 '''bash
 cd e_library

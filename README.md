@@ -1,103 +1,114 @@
-# 📚 Flutter E-Library App: A Digital Haven for Book Lovers!
+📚 Flutter E-Library App — A Digital Haven for Book Lovers!
 
-Welcome to the repository for my Flutter-built library application! This project is a comprehensive and visually appealing mobile app designed to provide users with an excellent book browsing and reading experience.
+Welcome to the Flutter E-Library App repository!
+This mobile application is designed to deliver a smooth, modern, and efficient reading experience. Built entirely with Flutter, it offers a clean UI, fast navigation, and a growing set of features for readers and learners.
 
-The app features a modern, intuitive design and is built entirely using **Flutter** for a beautiful, cross-platform UI.
+✨ Key Features
+📖 1. Diverse Library Access & Smart Search
 
----
+The main screen gives users quick access to different book types:
 
-## ✨ Key Features at a Glance
+Regular Books
 
-### 1. Diverse Library Access & Search 📖🎧🔍
-The main screen offers a fantastic selection and easy navigation:
-* **Book Selection:** Choose between **Regular Books**, **Audio Books**, and **3D Books** (conceptual/future integration).
-* **Quick Search Bar:** Search for books instantly by **Name** or **Author**.
+Audio Books
 
-### 2. Powerful Filtering Options 📊
-Easily find exactly what you're looking for with robust search capabilities:
-* **Advanced Filters:** Narrow down the library based on multiple parameters:
-    * 👤 **Author Name**
-    * 🏷️ **Book Category**
-    * 🎭 **Genre**
-    * 🧠 **Subject/Topic**
+3D Books (conceptual/future integration)
 
-### 3. Comprehensive Book Details & Reading 💻📱
-Tap on any book to see its details and decide how you want to enjoy it. The Book Details Screen provides extensive information and options:
+Plus a search bar for fast lookup by Book Name or Author.
 
-* **Detailed Information:**
-    * View a **brief description**.
-    * **Publication Year** 📅.
-    * The **Subject/Discipline** the book belongs to 🧠.
-* **Activity Metrics:**
-    * **Total Views** 👀.
-    * **Total Downloads** 💾.
-    * **Number of Likes** ❤️.
-* **User History:**
-    * A section at the bottom displays a list of **files the user has already downloaded** from this page, allowing for quick re-access.
-* **Reading Flexibility:**
-    * ⬇️ **Download:** Save the book directly to your device.
-    * 🌐 **Read Online:** Open and read the book instantly in your web browser.
+🔍 2. Advanced Filtering
 
----
+Users can filter books using:
 
-## ⚙️ Settings and Customization (Design Showcase)
+👤 Author
 
-The **Settings Screen** is a beautifully designed component, showcasing a full-featured UI for future enhancements.
+🏷️ Category
 
-### 🎨 Active Feature: Theme Switching
-* **Light/Dark Mode Toggle:** Users can manually switch between **Light** and **Dark** themes.
-* **System Sync:** The app also automatically adjusts the theme based on the user's **device system settings**.
+🎭 Genre
 
-### 🚧 Mockup Features (Ready for Future Implementation)
-*The following items are currently **inactive UI mockups** designed for future integration and a clean, organized user experience. They represent the intended structure for the application's evolution:*
-* **Account & Profile** 🧑‍💻
-* **Notifications** 🔔
-* **Privacy & Security** 🔒
-* **Help** (Includes `FAQ/Support` and `About App` sections) ❓
+🧠 Subject / Topic
 
----
+This makes it easy to find exactly what you need.
 
-## 🛠️ Technology Stack
+📘 3. Book Details & Reading Options
 
-* Built with **Flutter** (Dart)
-* State management (TBD)
-* Version Control via **GitHub**
+Each book page includes:
 
----
+Description
 
-## 🤝 Contribution
+Publication Year
 
-Feel free to explore the code, open issues, or suggest features!
+Category / Subject
 
----
+Views, Downloads, Likes
 
-## 🚀 Getting Started / Installation (How to Run)
+User Download History — previously downloaded files shown at the bottom
 
-To download, run, and test this project locally, follow these steps.
+Reading options:
 
-### Prerequisites:
-* **Flutter SDK:** Ensure you have Flutter installed and configured on your machine.
-* **Git:** Installed on your machine.
-* **IDE:** An Integrated Development Environment like **VS Code** or **Android Studio** configured for Flutter development.
+⬇️ Download to device
 
-### Installation Steps:
+🌐 Read Online via browser
 
-1. **Clone the Repository:**
-   Open your terminal/command line and clone the project using the repository URL:
-   ```bash
-   git clone https://github.com/Davut-06/e_library.git
-**Navigate to Project Folder: Change the directory to the newly cloned project folder:**
+⚙️ Settings & Customization
+🎨 Theme Switching
 
-'''bash
+Light / Dark mode toggle
+
+Automatic system-theme sync
+
+🚧 UI Mockups for Future Updates
+
+(Not yet functional — design only)
+
+Profile & Account
+
+Notifications
+
+Privacy & Security
+
+Help (FAQ, Support, About App)
+
+🛠️ Technology Stack
+
+Flutter (Dart)
+
+Git & GitHub
+
+State management (to be added)
+
+🤝 Contribution
+
+Feel free to explore, open issues, or suggest improvements.
+Any feedback is welcome!
+
+🚀 Installation & Setup Guide
+
+Follow these steps to download and run the project locally.
+
+✅ Prerequisites
+
+Before starting, make sure you have:
+
+Flutter SDK installed
+
+Git installed
+
+An IDE like Android Studio or VS Code
+
+A connected device or emulator
+
+📥 1. Clone the Repository
+git clone https://github.com/Davut-06/e_library.git
+
+📂 2. Open the Project Folder
 cd e_library
 
-Install Dependencies: Fetch all the necessary packages and dependencies listed in pubspec.yaml:
-
-'''bash
-
+📦 3. Install Dependencies
 flutter pub get
-Run the App: Connect a physical device or start an emulator/simulator. Then run the application:
 
-'''bash
+▶️ 4. Run the Application
+
+Start an emulator or connect a real device, then run:
 
 flutter run

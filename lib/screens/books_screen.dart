@@ -202,16 +202,16 @@ class _BooksScreenState extends State<BooksScreen> {
         foregroundColor: theme.appBarTheme.foregroundColor, // Colors.white,
         actions: [
           // Удален showServerSelectionModal
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Server selection (removed from cleanup)'),
-                ),
-              );
-            },
-            icon: const Icon(Icons.wifi_channel_outlined),
-          ),
+          // IconButton(
+          //   onPressed: () {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(
+          //         content: Text('Server selection (removed from cleanup)'),
+          //       ),
+          //    );
+          //},
+          //icon: const Icon(Icons.wifi_channel_outlined),
+          // ),
         ],
       ),
       backgroundColor: theme.colorScheme.background, // AppColors.secondaryBg,
